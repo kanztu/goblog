@@ -28,6 +28,25 @@ func CreateSqliteDB(name string) *xorm.Engine {
 			server_context.SrvCtx.Logger.Fatal(err)
 		}
 	}
+
+	pages := []model.PageCata{
+		{
+			CataName: "Home",
+			CataPath: "/",
+		},
+		{
+			CataName: "About",
+			CataPath: "/about",
+		},
+	}
+
+	for _, v := range pages {
+		_, err = db.Table(v.TableName()).Insert(&v)
+		if err != nil {
+			server_context.SrvCtx.Logger.Fatal(err)
+		}
+	}
+
 	return db
 }
 
