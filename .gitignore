@@ -1,0 +1,6 @@
+src/css/
+src/js
+src/wasm
+build/
+.DS_Store
+.vscode/
