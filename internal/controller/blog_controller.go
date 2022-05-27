@@ -114,16 +114,15 @@ func (c *BlogController) CreateBlog(ctx *gin.Context) {
 		return
 	}
 
-	blog_id, err := session.Table(b.TableName()).Insert(&b)
+	_, err = session.Table(b.TableName()).Insert(&b)
 	if err != nil {
 		ginrunner.ResponseJSON(ctx, err, nil)
 		return
 	}
-	content.BlogId = blog_id
+	content.BlogId = b.Id
 	content.Content = req.Content
 
-	_, err = session.Table(content.TableName()).Insert(&content)
-	if err != nil {
+	if _, err := session.Table(content.TableName()).Insert(&content); err != nil {
 		ginrunner.ResponseJSON(ctx, err, nil)
 		return
 	}
@@ -135,7 +134,7 @@ func (c *BlogController) CreateBlog(ctx *gin.Context) {
 	rsp.Description = req.Description
 	rsp.Tag = t.TagName
 	rsp.CreatedAt = b.CreatedAt
-	rsp.Id = blog_id
+	rsp.Id = b.Id
 
 	ginrunner.ResponseJSON(ctx, nil, rsp)
 }
@@ -216,7 +215,8 @@ func (c *BlogController) UpdateBlog(ctx *gin.Context) {
 }
 
 func (c *BlogController) DeleteBlog(ctx *gin.Context) {
-	var req DelBlogReq
+	var req DeleteBlogReq
+	var rsp DeleteBlogRsp
 	var err error
 	var b model.Blog
 
@@ -237,6 +237,10 @@ func (c *BlogController) DeleteBlog(ctx *gin.Context) {
 		ginrunner.ResponseJSON(ctx, err, nil)
 		return
 	}
-	session.Commit()
-	ginrunner.ResponseJSON(ctx, nil, "OK")
+	if err := session.Commit(); err != nil {
+		ginrunner.ResponseJSON(ctx, errors.New("fail to commit"), nil)
+		return
+	}
+	rsp.Id = req.Id
+	ginrunner.ResponseJSON(ctx, nil, rsp)
 }

@@ -70,3 +70,65 @@ func (c *TagController) GetTag(ctx *gin.Context) {
 	}
 	ginrunner.ResponseJSON(ctx, nil, rsp)
 }
+
+func (c *TagController) CreateTag(ctx *gin.Context) {
+	var req CreateTagReq
+	var rsp CreateTagRsp
+	var tag model.Tag
+	if err := ctx.BindJSON(&req); err != nil {
+		ginrunner.ResponseJSON(ctx, err, nil)
+		return
+	}
+
+	if req.TagName == "" {
+		ginrunner.ResponseJSON(ctx, errors.New("tagname cannot be empty"), nil)
+		return
+	}
+	tag.TagName = req.TagName
+
+	session := server_context.SrvCtx.DB.NewSession()
+	if _, err := session.Table(tag.TableName()).Insert(&tag); err != nil {
+		ginrunner.ResponseJSON(ctx, err, nil)
+		return
+	}
+
+	if err := session.Commit(); err != nil {
+		ginrunner.ResponseJSON(ctx, errors.New("fail to commit"), nil)
+		return
+	}
+
+	rsp.TagId = tag.TagId
+	rsp.TagName = tag.TagName
+	ginrunner.ResponseJSON(ctx, nil, rsp)
+}
+
+func (c *TagController) DeleteTag(ctx *gin.Context) {
+	var req DeleteTagReq
+	var rsp DeleteTagRsp
+	var err error
+	var t model.Tag
+
+	session := server_context.SrvCtx.DB.NewSession()
+	defer session.Close()
+	if err = ctx.BindJSON(&req); err != nil {
+		ginrunner.ResponseJSON(ctx, err, nil)
+		return
+	}
+
+	if req.Tagid <= 0 {
+		ginrunner.ResponseJSON(ctx, errors.New("invalid blog id"), nil)
+		return
+	}
+
+	_, err = session.Table(t.TableName()).Where("tag_id = ?", req.Tagid).Delete(&t)
+	if err != nil {
+		ginrunner.ResponseJSON(ctx, err, nil)
+		return
+	}
+	if err := session.Commit(); err != nil {
+		ginrunner.ResponseJSON(ctx, errors.New("fail to commit"), nil)
+		return
+	}
+	rsp.Id = int64(req.Tagid)
+	ginrunner.ResponseJSON(ctx, nil, rsp)
+}

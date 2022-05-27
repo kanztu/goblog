@@ -2,6 +2,10 @@ package controller
 
 import "time"
 
+type DeleteRsp struct {
+	Id int64 `json:"id"`
+}
+
 type BlogRsp struct {
 	Id          int64  `json:"id"`
 	Title       string `json:"title"`
@@ -36,8 +40,12 @@ type UpdateBlogReq struct {
 	CreateBlogReq
 }
 
-type DelBlogReq struct {
+type DeleteBlogReq struct {
 	Id int64 `json:"id"`
+}
+
+type DeleteBlogRsp struct {
+	DeleteRsp
 }
 
 type GetPageCataRsp struct {
@@ -49,4 +57,20 @@ type GetPageCataRsp struct {
 type GetTagRsp struct {
 	TagId   int64  `json:"tag_id"`
 	TagName string `json:"name"`
+}
+
+type CreateTagReq struct {
+	TagName string `json:"name"`
+}
+
+type CreateTagRsp struct {
+	GetTagRsp
+}
+
+type DeleteTagReq struct {
+	Tagid int `json:"id"`
+}
+
+type DeleteTagRsp struct {
+	DeleteRsp
 }

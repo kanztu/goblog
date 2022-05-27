@@ -3,6 +3,8 @@ package routers
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/kanztu/goblog/internal/controller"
+	// swaggerFiles "github.com/swaggo/files"
+	// ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func NewRouters() (r *gin.Engine) {
@@ -37,6 +39,8 @@ func NewRouters() (r *gin.Engine) {
 
 		api.GET("pagecata", pageController.GetPageCata)
 	}
+
+	// r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	return
 }
