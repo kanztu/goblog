@@ -11,5 +11,7 @@ build:
 	$(GOCMD) build -o $(BUILD_FOLDER)/$(BINARY_NAME) cmd/webserver/webserver.go
 	GOOS=js GOARCH=wasm $(GOCMD) build -o $(BUILD_WASM_FOLDER)/$(BINARY_NAME_WASM) cmd/wasm/blog_common/*
 
+gen_docs:
+	
 clean:
 	rm -r $(BUILD_FOLDER) $(BUILD_WASM_FOLDER)
