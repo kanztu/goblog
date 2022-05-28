@@ -1,0 +1,155 @@
+basePath: /api/v1
+definitions:
+  controller.BlogRsp:
+    properties:
+      auther:
+        type: string
+      created_at:
+        type: string
+      description:
+        type: string
+      icon:
+        type: string
+      id:
+        type: integer
+      tag:
+        type: string
+      tag_id:
+        type: integer
+      title:
+        type: string
+    type: object
+  controller.CreateBlogReq:
+    properties:
+      auther:
+        type: string
+      content:
+        type: string
+      description:
+        type: string
+      icon:
+        type: string
+      tag_id:
+        type: integer
+      tag_name:
+        type: string
+      title:
+        type: string
+    type: object
+  controller.GetBlogReq:
+    properties:
+      created_at:
+        type: string
+      tag_id:
+        type: integer
+      title:
+        type: string
+    type: object
+  controller.UpdateBlogReq:
+    properties:
+      auther:
+        type: string
+      content:
+        type: string
+      description:
+        type: string
+      icon:
+        type: string
+      id:
+        type: integer
+      tag_id:
+        type: integer
+      tag_name:
+        type: string
+      title:
+        type: string
+    type: object
+host: localhost:9097
+info:
+  contact: {}
+  description: Backend api for the server
+  title: Goblog API
+  version: "1.0"
+paths:
+  /blogs:
+    get:
+      description: GetBlog
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/controller.BlogRsp'
+            type: array
+      summary: Get Blog
+      tags:
+      - Blogs
+    post:
+      consumes:
+      - application/json
+      description: Create Blog
+      parameters:
+      - description: CreateBlogReq
+        in: body
+        name: CreateBlogReq
+        required: true
+        schema:
+          $ref: '#/definitions/controller.CreateBlogReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.BlogRsp'
+      summary: Create Blog
+      tags:
+      - Blogs
+    put:
+      consumes:
+      - application/json
+      description: Update Blog
+      parameters:
+      - description: UpdateBlogReq
+        in: body
+        name: UpdateBlogReq
+        required: true
+        schema:
+          $ref: '#/definitions/controller.UpdateBlogReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.BlogRsp'
+      summary: Update Blog
+      tags:
+      - Blogs
+  /blogs/tag:
+    get:
+      consumes:
+      - application/json
+      description: GetBlog tag
+      parameters:
+      - description: GetBlogReq
+        in: body
+        name: GetBlogReq
+        required: true
+        schema:
+          $ref: '#/definitions/controller.GetBlogReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/controller.BlogRsp'
+            type: array
+      summary: Get Blog with tag
+      tags:
+      - Blogs
+swagger: "2.0"
