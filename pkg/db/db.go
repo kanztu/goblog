@@ -12,6 +12,7 @@ import (
 
 func CreateSqliteDB(name string) *xorm.Engine {
 	db, err := xorm.NewEngine("sqlite3", name)
+	db.ShowSQL(true)
 	if err != nil {
 		server_context.SrvCtx.Logger.Fatal(err)
 	}
@@ -32,11 +33,11 @@ func CreateSqliteDB(name string) *xorm.Engine {
 	pages := []model.PageCata{
 		{
 			CataName: "Home",
-			CataPath: "/",
+			CataPath: "/blog",
 		},
 		{
 			CataName: "About",
-			CataPath: "/about",
+			CataPath: "/blog/about",
 		},
 	}
 
@@ -52,6 +53,7 @@ func CreateSqliteDB(name string) *xorm.Engine {
 
 func OpenSqliteDB(name string) *xorm.Engine {
 	db, err := xorm.NewEngine("sqlite3", name)
+	db.ShowSQL(true)
 	if err != nil {
 		server_context.SrvCtx.Logger.Fatal(err)
 	}

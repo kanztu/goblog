@@ -2,6 +2,11 @@ package controller
 
 import "time"
 
+const (
+	SiteTitle  = "Kanztu Blog"
+	SiteAuthor = "Kanztu Danny"
+)
+
 type DeleteRsp struct {
 	Id int64 `json:"id"`
 }

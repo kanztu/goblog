@@ -36,6 +36,16 @@ definitions:
       title:
         type: string
     type: object
+  controller.DeleteBlogReq:
+    properties:
+      id:
+        type: integer
+    type: object
+  controller.DeleteBlogRsp:
+    properties:
+      id:
+        type: integer
+    type: object
   controller.GetBlogReq:
     properties:
       created_at:
@@ -72,6 +82,27 @@ info:
   version: "1.0"
 paths:
   /blogs:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Blog
+      parameters:
+      - description: DeleteBlogReq
+        in: body
+        name: DeleteBlogReq
+        required: true
+        schema:
+          $ref: '#/definitions/controller.DeleteBlogReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.DeleteBlogRsp'
+      summary: Delete Blog
+      tags:
+      - Blogs
     get:
       description: GetBlog
       produces:

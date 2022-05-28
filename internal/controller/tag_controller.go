@@ -17,41 +17,40 @@ func NewTagController() *TagController {
 	return &TagController{}
 }
 
-func CreateTagIfNotExist(session *xorm.Session, tagName string, tagId int64) (int64, error) {
-	var tag_id int64
+func CreateTagIfNotExist(session *xorm.Session, tagName string, tagId int64) (model.Tag, error) {
 	var t model.Tag
+	server_context.SrvCtx.Logger.Debug(tagId)
+	server_context.SrvCtx.Logger.Debug(tagName)
 	if tagId > 0 {
 		// Have Tag Id, use Tag first
 		// check tagID exist
 		has, err := session.Table(t.TableName()).Where("tag_id = ?", tagId).Get(&t)
 		if err != nil {
-			return 0, err
+			return t, err
 		}
 		if !has {
-			return 0, errors.New("tag not found")
+			return t, errors.New("tag not found")
 		}
-		tag_id = tagId
 	} else if tagName != "" {
 		// Have Tag name
 		// check tag exist
 		has, err := session.Table(t.TableName()).Where("name = ?", tagName).Get(&t)
+		server_context.SrvCtx.Logger.Debugf("has: %v", has)
 		if err != nil {
-			return 0, err
+			return t, err
 		}
-		if has {
-			tag_id = tagId
-		} else {
+		if !has {
 			// Tag not found, create it
 			var new_tag model.Tag
 			new_tag.TagName = tagName
-			id, err := session.Table(new_tag.TableName()).Insert(&new_tag)
+			_, err := session.Table(new_tag.TableName()).Insert(&new_tag)
 			if err != nil {
-				return 0, err
+				return t, err
 			}
-			tag_id = id
+			t = new_tag
 		}
 	}
-	return tag_id, nil
+	return t, nil
 }
 
 func (c *TagController) GetTag(ctx *gin.Context) {

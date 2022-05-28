@@ -10,8 +10,8 @@ import (
 	"github.com/kanztu/goblog/pkg/utils"
 )
 
-var (
-	htmlroot = "src/html/"
+const (
+	htmlroot = "template/"
 )
 
 type PageController struct {
@@ -22,13 +22,37 @@ func NewPageController() *PageController {
 }
 
 func (c *PageController) GetIndexPage(ctx *gin.Context) {
-	fname := htmlroot + "index.html"
-	b, err := utils.ReadFileToByte(fname)
-	if err != nil {
-		ginrunner.ResponseJSON(ctx, err, nil)
-		return
+	fname := "index.html"
+
+	var pageCata []model.PageCata
+	var blogtags []model.BlogTag
+	var rsp []BlogRsp
+	var p model.PageCata
+	session := server_context.SrvCtx.DB.NewSession()
+	defer session.Close()
+	session.Table(p.TableName()).Find(&pageCata)
+
+	session.Table("blog").Join("INNER", "tag", "blog.tag_id = tag.tag_id").Find(&blogtags)
+	for _, v := range blogtags {
+		var r BlogRsp
+		r.Id = v.Id
+		r.Title = v.Title
+		r.Auther = v.Auther
+		r.Tag = v.TagName
+		r.TagId = v.Tag.TagId
+		r.Icon = v.Icon
+		r.Description = v.Description
+		r.CreatedAt = v.CreatedAt
+		rsp = append(rsp, r)
 	}
-	ctx.Data(http.StatusOK, ginrunner.ContentTypeHTML, b)
+
+	server_context.SrvCtx.Logger.Info(rsp)
+	ctx.HTML(http.StatusOK, fname, gin.H{
+		"title":       SiteTitle,
+		"site_author": SiteAuthor,
+		"cata":        pageCata,
+		"blog":        rsp,
+	})
 }
 
 func (c *PageController) GetBlogPage(ctx *gin.Context) {

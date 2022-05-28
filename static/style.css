@@ -314,3 +314,8 @@ body {
 .footer p {
   color: rgba(255, 255, 255, 0.5);
 }
+
+.special-card {
+    background-color: rgba(245, 245, 245, 1);
+    opacity: .4;
+  }

@@ -15,14 +15,13 @@ func NewRouters() (r *gin.Engine) {
 	pageController := controller.NewPageController()
 	tagController := controller.NewTagController()
 
+	r.LoadHTMLGlob("template/*")
+
 	page := r.Group("blog")
 	{
 		page.GET("/", pageController.GetIndexPage)
 		page.GET("/id/:id", pageController.GetBlogPage)
-		page.Static("css", "src/css")
-		page.Static("js", "src/js")
-		page.Static("images", "src/images")
-		page.Static("wasm", "src/wasm")
+		page.Static("static", "static")
 	}
 
 	api := r.Group("api/v1")
