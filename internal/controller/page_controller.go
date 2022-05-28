@@ -31,6 +31,16 @@ func (c *PageController) GetIndexPage(ctx *gin.Context) {
 	ctx.Data(http.StatusOK, ginrunner.ContentTypeHTML, b)
 }
 
+func (c *PageController) GetBlogPage(ctx *gin.Context) {
+	fname := htmlroot + "single.html"
+	b, err := utils.ReadFileToByte(fname)
+	if err != nil {
+		ginrunner.ResponseJSON(ctx, err, nil)
+		return
+	}
+	ctx.Data(http.StatusOK, ginrunner.ContentTypeHTML, b)
+}
+
 func (c *PageController) GetPageCata(ctx *gin.Context) {
 	var rsp []GetPageCataRsp
 	var pageCata []model.PageCata

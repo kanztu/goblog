@@ -1,0 +1,237 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Backend api for the server",
+        "title": "Goblog API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:9097",
+    "basePath": "/api/v1",
+    "paths": {
+        "/blogs": {
+            "get": {
+                "description": "GetBlog",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Blogs"
+                ],
+                "summary": "Get Blog",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/controller.BlogRsp"
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update Blog",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Blogs"
+                ],
+                "summary": "Update Blog",
+                "parameters": [
+                    {
+                        "description": "UpdateBlogReq",
+                        "name": "UpdateBlogReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controller.UpdateBlogReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controller.BlogRsp"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create Blog",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Blogs"
+                ],
+                "summary": "Create Blog",
+                "parameters": [
+                    {
+                        "description": "CreateBlogReq",
+                        "name": "CreateBlogReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controller.CreateBlogReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controller.BlogRsp"
+                        }
+                    }
+                }
+            }
+        },
+        "/blogs/tag": {
+            "get": {
+                "description": "GetBlog tag",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Blogs"
+                ],
+                "summary": "Get Blog with tag",
+                "parameters": [
+                    {
+                        "description": "GetBlogReq",
+                        "name": "GetBlogReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controller.GetBlogReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/controller.BlogRsp"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "controller.BlogRsp": {
+            "type": "object",
+            "properties": {
+                "auther": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "icon": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "tag": {
+                    "type": "string"
+                },
+                "tag_id": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "controller.CreateBlogReq": {
+            "type": "object",
+            "properties": {
+                "auther": {
+                    "type": "string"
+                },
+                "content": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "icon": {
+                    "type": "string"
+                },
+                "tag_id": {
+                    "type": "integer"
+                },
+                "tag_name": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "controller.GetBlogReq": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "tag_id": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "controller.UpdateBlogReq": {
+            "type": "object",
+            "properties": {
+                "auther": {
+                    "type": "string"
+                },
+                "content": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "icon": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "tag_id": {
+                    "type": "integer"
+                },
+                "tag_name": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

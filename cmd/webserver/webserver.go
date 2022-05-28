@@ -4,12 +4,20 @@ import (
 	"flag"
 	"time"
 
+	_ "github.com/kanztu/goblog/docs"
 	"github.com/kanztu/goblog/internal/routers"
 	"github.com/kanztu/goblog/pkg/config"
 	"github.com/kanztu/goblog/pkg/db"
 	"github.com/kanztu/goblog/pkg/ginrunner"
 	"github.com/kanztu/goblog/pkg/server_context"
 )
+
+// @title           Goblog API
+// @version         1.0
+// @description     Backend api for the server
+
+// @host      localhost:9097
+// @BasePath  /api/v1
 
 func main() {
 	var (
