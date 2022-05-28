@@ -1,13 +1,16 @@
 package controller
 
 import (
+	"html/template"
 	"net/http"
+	"path/filepath"
 
 	"github.com/gin-gonic/gin"
+	"github.com/kanztu/goblog/pkg/config"
 	"github.com/kanztu/goblog/pkg/ginrunner"
+	"github.com/kanztu/goblog/pkg/md"
 	"github.com/kanztu/goblog/pkg/model"
 	"github.com/kanztu/goblog/pkg/server_context"
-	"github.com/kanztu/goblog/pkg/utils"
 )
 
 const (
@@ -56,13 +59,33 @@ func (c *PageController) GetIndexPage(ctx *gin.Context) {
 }
 
 func (c *PageController) GetBlogPage(ctx *gin.Context) {
-	fname := htmlroot + "single.html"
-	b, err := utils.ReadFileToByte(fname)
+	var pageCata []model.PageCata
+	var p model.PageCata
+	var b model.BlogTag
+	var con model.Content
+	id := ctx.Param("id")
+	server_context.SrvCtx.Logger.Debug(id)
+	fname := "blog.html"
+	session := server_context.SrvCtx.DB.NewSession()
+	defer session.Close()
+	session.Table(p.TableName()).Find(&pageCata)
+	session.Table("blog").Join("INNER", "tag", "blog.tag_id = tag.tag_id").Where("blog.id = ?", id).Get(&b)
+	session.Table(con.TableName()).Where("blog_id = ?", b.Id).Get(&con)
+
+	content, err := md.FetchMDToHtml(filepath.Join(config.CfgGlobal.Stor.Blog, con.Content))
 	if err != nil {
 		ginrunner.ResponseJSON(ctx, err, nil)
 		return
 	}
-	ctx.Data(http.StatusOK, ginrunner.ContentTypeHTML, b)
+
+	ctx.HTML(http.StatusOK, fname, gin.H{
+		"title":       SiteTitle,
+		"site_author": SiteAuthor,
+		"cata":        pageCata,
+		"BlogTitle":   b.Title,
+		"Description": b.Description,
+		"Content":     template.HTML(content),
+	})
 }
 
 func (c *PageController) GetPageCata(ctx *gin.Context) {

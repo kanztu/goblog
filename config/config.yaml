@@ -1,2 +1,4 @@
 db:
-  file: "blog.db"
+  file: "./storage/blog.db"
+storage:
+  blog: "./storage"

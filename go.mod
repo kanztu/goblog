@@ -5,6 +5,7 @@ go 1.18
 require (
 	github.com/gin-gonic/gin v1.7.7
 	github.com/go-xorm/xorm v0.7.9
+	github.com/gomarkdown/markdown v0.0.0-20220527210340-c82b80a9daf2
 	github.com/mattn/go-sqlite3 v1.14.12
 	github.com/sirupsen/logrus v1.8.1
 	github.com/swaggo/files v0.0.0-20210815190702-a29dd2bc99b2
