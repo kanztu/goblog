@@ -72,7 +72,9 @@ func (c *PageController) GetBlogPage(ctx *gin.Context) {
 	session.Table("blog").Join("INNER", "tag", "blog.tag_id = tag.tag_id").Where("blog.id = ?", id).Get(&b)
 	session.Table(con.TableName()).Where("blog_id = ?", b.Id).Get(&con)
 
-	content, err := md.FetchMDToHtml(filepath.Join(config.CfgGlobal.Stor.Blog, con.Content))
+	mdfname := filepath.Join(config.CfgGlobal.Stor.Blog, con.Content)
+	server_context.SrvCtx.Logger.Debugf("Load markdown: %v", mdfname)
+	content, err := md.FetchMDToHtml(mdfname)
 	if err != nil {
 		ginrunner.ResponseJSON(ctx, err, nil)
 		return
