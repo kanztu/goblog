@@ -21,6 +21,9 @@ func NewRouters() (r *gin.Engine) {
 	{
 		page.GET("/", pageController.GetIndexPage)
 		page.GET("/id/:id", pageController.GetBlogPage)
+		page.GET("/tag/:id", pageController.GetBlogByTagPage)
+		page.GET("/tag", pageController.GetTagPage)
+		page.GET("/about", pageController.GetAboutPage)
 		page.Static("static", "static")
 	}
 
