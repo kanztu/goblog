@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+
+{{ template "header" .}}
+
+<body>
+    <div class="wrapper d-flex align-items-stretch">
+        {{ template "sidebar" .}}
+        <!-- Page Content  -->
+        <div class="container-fluid ">
+            <div id="content" class="p-4 md-3 pt-5 overflow-auto">
+                {{ range .blog }}
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card border-dark border-5 text-white bg-dark mb-lg-4 w-75">
+                            <div class="row no-gutters">
+                                <div class="col-md-4">
+                                    <img src="{{ .Icon }}" class="card-img limit_img rounded-circle">
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body ">
+                                        <h5 class="card-title">{{.Title}}</h5>
+                                        <p class="card-text">{{.Description}}</p>
+                                        <p class="card-text"><small class="text-muted">Created at {{.CreatedAt}}
+                                            </small>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-transparent border-success">
+                                <a class="btn btn-primary btn-sm" href="/blog/id/{{.Id}}">Read more</a>
+                                <a class="btn btn-primary btn-sm" href="/blog/tag/{{.TagId}}">{{ .Tag }}</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{ end }}
+
+            </div>
+        </div>
+        {{ template "footer" .}}
+    </div>
+
+    <script src="/blog/static/main.js"></script>
+</body>
+
+</html>

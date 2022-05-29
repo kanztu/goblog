@@ -14,7 +14,11 @@ func fetchBlog() {
 	bodyDOM := wasm.GetElementById("blog_list")
 	bodyDOM.DeleteInnerHTML()
 	for _, v := range rsp {
-		url := fmt.Sprintf("/id/%d", v.Id)
+		url := fmt.Sprintf("/blog/id/%d", v.Id)
 		bodyDOM.AppendInnerHTML(fmt.Sprintf(blog_preview_html, url, v.Icon, url, v.Title, v.CreatedAt, v.TagId, v.Tag, v.Description, url))
 	}
 }
+
+// func fetchBlogContent() {
+// 	path := wasm.GetPath()
+// }

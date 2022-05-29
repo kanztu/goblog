@@ -12,8 +12,8 @@ const (
 				<div class="meta-wrap">
 					<p class="meta">
 						<span><i class="icon-calendar mr-2"></i>%s</span>
-						<span><a onclick="searchBlogByTag(%d)"><i
-									class="icon-folder-o mr-2"></i>%s</a></span>
+						<span><a ><i onclick="searchBlogByTag(%d)"
+									class="icon-folder-o btn-custom mr-2">%s</i></a></span>
 					</p>
 				</div>
 				<p class="mb-4">%s</p>
@@ -23,5 +23,5 @@ const (
 		</div>
 	</div>
 	`
-	tag_cloud_html = `<a onclick="fetchTagResult(%d)" class="tag-cloud-link">%s</a>`
+	tag_cloud_html = `<a onclick="searchBlogByTag(%d)" class="tag-cloud-link">%s</a>`
 )

@@ -3,6 +3,8 @@ package routers
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/kanztu/goblog/internal/controller"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func NewRouters() (r *gin.Engine) {
@@ -13,13 +15,16 @@ func NewRouters() (r *gin.Engine) {
 	pageController := controller.NewPageController()
 	tagController := controller.NewTagController()
 
+	r.LoadHTMLGlob("template/*")
+
 	page := r.Group("blog")
 	{
 		page.GET("/", pageController.GetIndexPage)
-		page.Static("css", "src/css")
-		page.Static("js", "src/js")
-		page.Static("images", "src/images")
-		page.Static("wasm", "src/wasm")
+		page.GET("/id/:id", pageController.GetBlogPage)
+		page.GET("/tag/:id", pageController.GetBlogByTagPage)
+		page.GET("/tag", pageController.GetTagPage)
+		page.GET("/about", pageController.GetAboutPage)
+		page.Static("static", "static")
 	}
 
 	api := r.Group("api/v1")
@@ -37,6 +42,8 @@ func NewRouters() (r *gin.Engine) {
 
 		api.GET("pagecata", pageController.GetPageCata)
 	}
+
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	return
 }

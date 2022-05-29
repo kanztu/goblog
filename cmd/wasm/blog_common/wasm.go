@@ -1,6 +1,7 @@
 package main
 
 import (
+	"strings"
 	"syscall/js"
 
 	"github.com/kanztu/goblog/pkg/logger"
@@ -17,6 +18,9 @@ func main() {
 	fetchPageCata()
 	if wasm.GetPath() == "/blog/" {
 		fetchBlog()
+		fetchTagCloud()
+	}
+	if strings.Contains(wasm.GetPath(), "/blog/id") {
 		fetchTagCloud()
 	}
 

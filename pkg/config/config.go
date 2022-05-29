@@ -8,11 +8,16 @@ import (
 )
 
 type GlobalConfig struct {
-	DB SqliteConfig `yaml:"db"`
+	DB   SqliteConfig `yaml:"db"`
+	Stor Storage      `yaml:"storage"`
 }
 
 type SqliteConfig struct {
 	File string `yaml:"file"`
+}
+
+type Storage struct {
+	Blog string `yaml:"blog"`
 }
 
 var (

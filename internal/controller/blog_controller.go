@@ -17,6 +17,13 @@ func NewBlogController() *BlogController {
 	return &BlogController{}
 }
 
+// GetBlog
+// @Summary      Get Blog
+// @Description  GetBlog
+// @Tags         Blogs
+// @Produce      json
+// @Success      200  {object}  []BlogRsp
+// @Router       /blogs [get]
 func (c *BlogController) GetBlog(ctx *gin.Context) {
 	var rsp []BlogRsp
 	var blogtags []model.BlogTag
@@ -24,11 +31,8 @@ func (c *BlogController) GetBlog(ctx *gin.Context) {
 	session := server_context.SrvCtx.DB.NewSession()
 	defer session.Close()
 
-	sql := session.Table("blog").Join("INNER", "tag", "blog.tag_id = tag.tag_id")
-	// if req.TagId >= 0 {
-	// 	sql = sql.Where("blog.tag_id = ?", req.TagId)
-	// }
-	sql.Find(&blogtags)
+	session.Table("blog").Join("INNER", "tag", "blog.tag_id = tag.tag_id").Find(&blogtags)
+	server_context.SrvCtx.Logger.Debugf("%d blogs found in db", len(blogtags))
 	for _, v := range blogtags {
 		var r BlogRsp
 		r.Id = v.Id
@@ -45,6 +49,15 @@ func (c *BlogController) GetBlog(ctx *gin.Context) {
 	ginrunner.ResponseJSON(ctx, nil, rsp)
 }
 
+// GetBlog
+// @Summary      Get Blog with tag
+// @Description  GetBlog tag
+// @Tags         Blogs
+// @Accept       json
+// @Param        GetBlogReq   body      GetBlogReq  true  "GetBlogReq"
+// @Produce      json
+// @Success      200  {object}  []BlogRsp
+// @Router       /blogs/tag [get]
 func (c *BlogController) GetBlogWithTag(ctx *gin.Context) {
 	var req GetBlogReq
 	var rsp []BlogRsp
@@ -78,13 +91,21 @@ func (c *BlogController) GetBlogWithTag(ctx *gin.Context) {
 	ginrunner.ResponseJSON(ctx, nil, rsp)
 }
 
+// Create Blog
+// @Summary      Create Blog
+// @Description  Create Blog
+// @Tags         Blogs
+// @Accept       json
+// @Param        CreateBlogReq   body      CreateBlogReq  true  "CreateBlogReq"
+// @Produce      json
+// @Success      200  {object}  BlogRsp
+// @Router       /blogs [post]
 func (c *BlogController) CreateBlog(ctx *gin.Context) {
 	var err error
 	var req CreateBlogReq
 	var t model.Tag
 	var b model.Blog
 	var content model.Content
-	var tag_id int64
 
 	session := server_context.SrvCtx.DB.NewSession()
 	defer session.Close()
@@ -93,11 +114,11 @@ func (c *BlogController) CreateBlog(ctx *gin.Context) {
 		return
 	}
 
-	if req.TagName == "" {
+	if req.TagName == "" && req.TagId <= 0 {
 		ginrunner.ResponseJSON(ctx, errors.New("no tag provided"), nil)
 		return
 	}
-	tag_id, err = CreateTagIfNotExist(session, req.TagName, req.TagId)
+	t, err = CreateTagIfNotExist(session, req.TagName, req.TagId)
 
 	if err != nil {
 		ginrunner.ResponseJSON(ctx, err, nil)
@@ -106,7 +127,7 @@ func (c *BlogController) CreateBlog(ctx *gin.Context) {
 	b.Title = req.Title
 	b.Auther = req.Auther
 	b.Description = req.Description
-	b.TagId = tag_id
+	b.TagId = t.TagId
 	b.CreatedAt = time.Now()
 	b.Icon = req.Icon
 	if err != nil {
@@ -114,16 +135,15 @@ func (c *BlogController) CreateBlog(ctx *gin.Context) {
 		return
 	}
 
-	blog_id, err := session.Table(b.TableName()).Insert(&b)
+	_, err = session.Table(b.TableName()).Insert(&b)
 	if err != nil {
 		ginrunner.ResponseJSON(ctx, err, nil)
 		return
 	}
-	content.BlogId = blog_id
+	content.BlogId = b.Id
 	content.Content = req.Content
 
-	_, err = session.Table(content.TableName()).Insert(&content)
-	if err != nil {
+	if _, err := session.Table(content.TableName()).Insert(&content); err != nil {
 		ginrunner.ResponseJSON(ctx, err, nil)
 		return
 	}
@@ -134,12 +154,24 @@ func (c *BlogController) CreateBlog(ctx *gin.Context) {
 	rsp.Auther = req.Auther
 	rsp.Description = req.Description
 	rsp.Tag = t.TagName
+	rsp.TagId = t.TagId
+	rsp.Icon = req.Icon
 	rsp.CreatedAt = b.CreatedAt
-	rsp.Id = blog_id
+	rsp.Id = b.Id
+	server_context.SrvCtx.Logger.Infof("Blog created with id %d", b.Id)
 
 	ginrunner.ResponseJSON(ctx, nil, rsp)
 }
 
+// Update Blog
+// @Summary      Update Blog
+// @Description  Update Blog
+// @Tags         Blogs
+// @Accept       json
+// @Param        UpdateBlogReq   body      UpdateBlogReq  true  "UpdateBlogReq"
+// @Produce      json
+// @Success      200  {object}  BlogRsp
+// @Router       /blogs [put]
 func (c *BlogController) UpdateBlog(ctx *gin.Context) {
 	var req UpdateBlogReq
 	var blog model.Blog
@@ -180,7 +212,8 @@ func (c *BlogController) UpdateBlog(ctx *gin.Context) {
 	}
 
 	if req.TagId > 0 || req.TagName != "" {
-		blog.TagId, err = CreateTagIfNotExist(session, req.TagName, req.TagId)
+		t, err := CreateTagIfNotExist(session, req.TagName, req.TagId)
+		blog.TagId = t.TagId
 		if err != nil {
 			ginrunner.ResponseJSON(ctx, err, nil)
 			return
@@ -215,8 +248,18 @@ func (c *BlogController) UpdateBlog(ctx *gin.Context) {
 	ginrunner.ResponseJSON(ctx, nil, blog)
 }
 
+// Update Blog
+// @Summary      Delete Blog
+// @Description  Delete Blog
+// @Tags         Blogs
+// @Accept       json
+// @Param        DeleteBlogReq   body      DeleteBlogReq  true  "DeleteBlogReq"
+// @Produce      json
+// @Success      200  {object}  DeleteBlogRsp
+// @Router       /blogs [delete]
 func (c *BlogController) DeleteBlog(ctx *gin.Context) {
-	var req DelBlogReq
+	var req DeleteBlogReq
+	var rsp DeleteBlogRsp
 	var err error
 	var b model.Blog
 
@@ -237,6 +280,10 @@ func (c *BlogController) DeleteBlog(ctx *gin.Context) {
 		ginrunner.ResponseJSON(ctx, err, nil)
 		return
 	}
-	session.Commit()
-	ginrunner.ResponseJSON(ctx, nil, "OK")
+	if err := session.Commit(); err != nil {
+		ginrunner.ResponseJSON(ctx, errors.New("fail to commit"), nil)
+		return
+	}
+	rsp.Id = req.Id
+	ginrunner.ResponseJSON(ctx, nil, rsp)
 }
