@@ -19,6 +19,6 @@ func fetchBlog() {
 	}
 }
 
-func fetchBlogContent() {
-	path := wasm.GetPath()
-}
+// func fetchBlogContent() {
+// 	path := wasm.GetPath()
+// }
