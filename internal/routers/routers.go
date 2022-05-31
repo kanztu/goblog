@@ -30,17 +30,23 @@ func NewRouters() (r *gin.Engine) {
 	api := r.Group("api/v1")
 	{
 		api.GET("blogs", blogController.GetBlog)
-		api.POST("blogs", blogController.CreateBlog)
-		api.PUT("blogs")
-		api.DELETE("blogs", blogController.DeleteBlog)
-
 		api.GET("blogs/tag", blogController.GetBlogWithTag)
-
 		api.GET("tags", tagController.GetTag)
-		api.POST("tags")
-		api.DELETE("tags")
-
 		api.GET("pagecata", pageController.GetPageCata)
+	}
+
+	admin := r.Group("admin")
+	{
+		api := admin.Group("api/v1")
+		{
+			api.POST("blogs", blogController.CreateBlog)
+			api.PUT("blogs")
+			api.DELETE("blogs", blogController.DeleteBlog)
+
+			api.POST("tags")
+			api.DELETE("tags")
+
+		}
 	}
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
