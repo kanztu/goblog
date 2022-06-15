@@ -35,6 +35,7 @@ func NewRouters() (r *gin.Engine) {
 		api.GET("pagecata", pageController.GetPageCata)
 	}
 
+	// Use nginx to provide basic auth for this route group
 	admin := r.Group("admin")
 	{
 		api := admin.Group("api/v1")
@@ -45,11 +46,9 @@ func NewRouters() (r *gin.Engine) {
 
 			api.POST("tags")
 			api.DELETE("tags")
-
 		}
+		r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	}
-
-	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	return
 }
