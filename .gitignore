@@ -5,4 +5,4 @@ src/html
 build/
 .DS_Store
 .vscode/
-static/wasm_exec.js
+static/main.wasm
