@@ -33,22 +33,21 @@ func NewRouters() (r *gin.Engine) {
 		api.GET("blogs/tag", blogController.GetBlogWithTag)
 		api.GET("tags", tagController.GetTag)
 		api.GET("pagecata", pageController.GetPageCata)
+
+		admin := api.Group("admin")
+		{
+			admin.POST("blogs", blogController.CreateBlog)
+			admin.PUT("blogs")
+			admin.DELETE("blogs", blogController.DeleteBlog)
+
+			admin.POST("tags")
+			admin.DELETE("tags")
+
+			admin.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+		}
 	}
 
 	// Use nginx to provide basic auth for this route group
-	admin := r.Group("admin")
-	{
-		api := admin.Group("api/v1")
-		{
-			api.POST("blogs", blogController.CreateBlog)
-			api.PUT("blogs")
-			api.DELETE("blogs", blogController.DeleteBlog)
-
-			api.POST("tags")
-			api.DELETE("tags")
-		}
-		r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	}
 
 	return
 }
