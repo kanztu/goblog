@@ -54,7 +54,7 @@ func (d DOM) GetInnerHTML() string {
 }
 
 func (d DOM) SetInnerHTML(html string) {
-	d.SetInnerHTML(html)
+	d.Dom.Set("innerHTML", html)
 
 }
 

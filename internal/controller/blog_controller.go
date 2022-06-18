@@ -99,7 +99,7 @@ func (c *BlogController) GetBlogWithTag(ctx *gin.Context) {
 // @Param        CreateBlogReq   body      CreateBlogReq  true  "CreateBlogReq"
 // @Produce      json
 // @Success      200  {object}  BlogRsp
-// @Router       /blogs [post]
+// @Router       /admin/blogs [post]
 func (c *BlogController) CreateBlog(ctx *gin.Context) {
 	var err error
 	var req CreateBlogReq
@@ -256,7 +256,7 @@ func (c *BlogController) UpdateBlog(ctx *gin.Context) {
 // @Param        DeleteBlogReq   body      DeleteBlogReq  true  "DeleteBlogReq"
 // @Produce      json
 // @Success      200  {object}  DeleteBlogRsp
-// @Router       /blogs [delete]
+// @Router       /admin/blogs [delete]
 func (c *BlogController) DeleteBlog(ctx *gin.Context) {
 	var req DeleteBlogReq
 	var rsp DeleteBlogRsp

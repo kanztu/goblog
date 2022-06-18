@@ -129,7 +129,7 @@ func (c *PageController) GetAboutPage(ctx *gin.Context) {
 		"site_author": SiteAuthor,
 		"cata":        pageCata,
 		"BlogTitle":   "About",
-		"Description": "",
+		"Description": template.HTML(`<div id="description"></div>`),
 		"Content":     template.HTML(content),
 	})
 }
