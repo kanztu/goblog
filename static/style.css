@@ -33,6 +33,11 @@
     background-color: transparent;
   }
   
+  hr {
+    border-bottom: 3px solid black;
+    margin-top: 50px;
+  }
+
   a:hover {
     color: #0056b3;
     text-decoration: underline;
