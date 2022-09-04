@@ -112,7 +112,7 @@ func (c *PageController) GetBlogPage(ctx *gin.Context) {
 func (c *PageController) GetAboutPage(ctx *gin.Context) {
 	var pageCata []model.PageCata
 	var p model.PageCata
-	fname := "blog.html"
+	fname := "about.html"
 	session := server_context.SrvCtx.DB.NewSession()
 	defer session.Close()
 	session.Table(p.TableName()).Find(&pageCata)
