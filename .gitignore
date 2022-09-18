@@ -5,5 +5,5 @@ src/html
 build/
 .DS_Store
 .vscode/
-static/main.wasm
+wasm/main.wasm
 docs/
