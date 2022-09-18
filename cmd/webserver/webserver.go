@@ -4,7 +4,7 @@ import (
 	"flag"
 	"time"
 
-	_ "github.com/kanztu/goblog/docs"
+	// _ "github.com/kanztu/goblog/docs"
 	"github.com/kanztu/goblog/internal/routers"
 	"github.com/kanztu/goblog/pkg/config"
 	"github.com/kanztu/goblog/pkg/db"
