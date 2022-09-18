@@ -1,0 +1,3 @@
+[submodule "goblog-frontend"]
+	path = goblog-frontend
+	url = https://github.com/kanztu/goblog-frontend
