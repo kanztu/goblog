@@ -1,3 +1,6 @@
 [submodule "goblog-frontend"]
 	path = goblog-frontend
 	url = https://github.com/kanztu/goblog-frontend
+[submodule "goblog-storage"]
+	path = goblog-storage
+	url = https://github.com/kanztu/goblog-storage
