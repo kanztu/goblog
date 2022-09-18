@@ -3,8 +3,6 @@ package routers
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/kanztu/goblog/internal/controller"
-	swaggerFiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func NewRouters() (r *gin.Engine) {
@@ -15,7 +13,7 @@ func NewRouters() (r *gin.Engine) {
 	pageController := controller.NewPageController()
 	tagController := controller.NewTagController()
 
-	r.LoadHTMLGlob("template/*")
+	r.LoadHTMLGlob("goblog-frontend/template/*")
 
 	page := r.Group("blog")
 	{
@@ -24,7 +22,8 @@ func NewRouters() (r *gin.Engine) {
 		page.GET("/tag/:id", pageController.GetBlogByTagPage)
 		page.GET("/tag", pageController.GetTagPage)
 		page.GET("/about", pageController.GetAboutPage)
-		page.Static("static", "static")
+		page.Static("/static", "./goblog-frontend")
+		page.Static("/wasm", "./wasm")
 	}
 
 	api := r.Group("api/v1")
@@ -34,17 +33,17 @@ func NewRouters() (r *gin.Engine) {
 		api.GET("tags", tagController.GetTag)
 		api.GET("pagecata", pageController.GetPageCata)
 
-		admin := api.Group("admin")
-		{
-			admin.POST("blogs", blogController.CreateBlog)
-			admin.PUT("blogs")
-			admin.DELETE("blogs", blogController.DeleteBlog)
+		// admin := api.Group("admin")
+		// {
+		// 	admin.POST("blogs", blogController.CreateBlog)
+		// 	admin.PUT("blogs")
+		// 	admin.DELETE("blogs", blogController.DeleteBlog)
 
-			admin.POST("tags")
-			admin.DELETE("tags")
+		// 	admin.POST("tags")
+		// 	admin.DELETE("tags")
 
-			admin.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-		}
+		// 	admin.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+		// }
 	}
 
 	// Use nginx to provide basic auth for this route group

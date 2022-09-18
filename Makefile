@@ -2,7 +2,7 @@ GOCMD=go
 BINARY_NAME=goblog
 BINARY_NAME_WASM=main.wasm
 BUILD_FOLDER=build
-BUILD_WASM_FOLDER=static
+BUILD_WASM_FOLDER=wasm
 GOROOT := $(shell go env GOROOT)
 
 
