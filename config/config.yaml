@@ -1,4 +1,4 @@
 db:
-  file: "./goblog/storage/blog.db"
+  file: "./goblog-storage/blog.db"
 storage:
-  blog: "./goblog/storage"
+  blog: "./goblog-storage"
