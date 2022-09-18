@@ -22,8 +22,8 @@ func NewRouters() (r *gin.Engine) {
 		page.GET("/tag/:id", pageController.GetBlogByTagPage)
 		page.GET("/tag", pageController.GetTagPage)
 		page.GET("/about", pageController.GetAboutPage)
-		page.Static("static", "static")
-		page.Static("wasm", "wasm")
+		page.Static("/static", "./goblog-frontend")
+		page.Static("/wasm", "./wasm")
 	}
 
 	api := r.Group("api/v1")
