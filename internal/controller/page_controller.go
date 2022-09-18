@@ -116,7 +116,7 @@ func (c *PageController) GetAboutPage(ctx *gin.Context) {
 	session := server_context.SrvCtx.DB.NewSession()
 	defer session.Close()
 	session.Table(p.TableName()).Find(&pageCata)
-	mdfname := filepath.Join("./storage", "about.md")
+	mdfname := filepath.Join(config.CfgGlobal.Stor.Blog, "about.md")
 	server_context.SrvCtx.Logger.Debugf("Load markdown: %v", mdfname)
 	content, err := md.FetchMDToHtml(mdfname)
 	if err != nil {
